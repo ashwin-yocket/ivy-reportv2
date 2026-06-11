@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yocket Elite · Admin</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap');
+:root{--gold:#C9922A;--gold-light:#E8B84B;--ink:#1A1A1A;--mid:#5A5A5A;--light:#9A9A9A;--border:#E8E4DC;--bg:#FFFFFF;--bg-soft:#FAFAF8;--red:#C0392B;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg-soft);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;}
+
+/* LOGIN */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.login-box{background:var(--bg);border:1px solid var(--border);padding:48px;max-width:400px;width:100%;text-align:center;}
+.login-logo{font-family:'EB Garamond',serif;font-size:22px;color:var(--ink);margin-bottom:4px;}
+.login-logo span{color:var(--gold);}
+.login-sub{font-size:12px;color:var(--light);letter-spacing:.08em;text-transform:uppercase;margin-bottom:32px;}
+.login-input{width:100%;padding:13px 16px;font-size:15px;font-family:'Inter',sans-serif;border:1.5px solid var(--border);background:var(--bg);color:var(--ink);outline:none;transition:border-color .2s;border-radius:2px;margin-bottom:12px;text-align:center;letter-spacing:.1em;}
+.login-input:focus{border-color:var(--gold);}
+.login-btn{width:100%;background:var(--gold);color:#fff;border:none;padding:14px;font-size:15px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;border-radius:2px;transition:background .2s;}
+.login-btn:hover{background:var(--gold-light);}
+.login-err{font-size:13px;color:var(--red);margin-top:10px;display:none;}
+
+/* ADMIN */
+#admin-screen{display:none;}
+.admin-header{background:var(--bg);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;}
+.admin-logo{font-family:'EB Garamond',serif;font-size:18px;color:var(--ink);}
+.admin-logo span{color:var(--gold);}
+.admin-tag{font-size:11px;color:var(--light);letter-spacing:.1em;text-transform:uppercase;margin-left:12px;}
+.header-actions{display:flex;gap:10px;align-items:center;}
+.btn-dl{background:var(--gold);color:#fff;border:none;padding:9px 20px;font-size:13px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;border-radius:2px;transition:background .2s;}
+.btn-dl:hover{background:var(--gold-light);}
+.btn-logout{background:none;border:1px solid var(--border);color:var(--mid);padding:9px 16px;font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;border-radius:2px;}
+.btn-logout:hover{border-color:var(--mid);}
+.admin-body{padding:32px;}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:32px;}
+.stat-card{background:var(--bg);border:1px solid var(--border);padding:20px;border-radius:2px;}
+.stat-num{font-family:'EB Garamond',serif;font-size:36px;color:var(--ink);line-height:1;}
+.stat-label{font-size:11px;color:var(--light);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;}
+.stat-sub{font-size:12px;color:var(--gold);margin-top:2px;}
+.table-wrap{background:var(--bg);border:1px solid var(--border);border-radius:2px;overflow:hidden;}
+.table-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.table-title{font-size:13px;font-weight:500;color:var(--ink);}
+.search-input{padding:8px 12px;font-size:13px;font-family:'Inter',sans-serif;border:1px solid var(--border);background:var(--bg-soft);color:var(--ink);outline:none;border-radius:2px;width:220px;}
+.search-input:focus{border-color:var(--gold);}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;}
+.tbl th{text-align:left;padding:10px 16px;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--light);border-bottom:1px solid var(--border);background:var(--bg-soft);white-space:nowrap;}
+.tbl td{padding:12px 16px;border-bottom:1px solid var(--bg-soft);vertical-align:middle;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:var(--bg-soft);}
+.score-pill{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:500;}
+.score-high{background:#E8F5EE;color:#1E6B3C;}
+.score-mid{background:#FBF4E8;color:#C9922A;}
+.score-low{background:#FDEAEA;color:#C0392B;}
+.btn-view{background:none;border:1px solid var(--border);color:var(--mid);padding:5px 12px;font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;border-radius:2px;transition:all .15s;white-space:nowrap;}
+.btn-view:hover{border-color:var(--gold);color:var(--gold);}
+.empty-state{padding:60px 20px;text-align:center;color:var(--light);font-size:14px;}
+.loading-state{padding:40px 20px;text-align:center;color:var(--light);font-size:13px;}
+
+/* REPORT MODAL */
+#report-modal{display:none;position:fixed;inset:0;z-index:1000;background:rgba(10,10,10,.7);overflow-y:auto;padding:24px;}
+.modal-inner{max-width:860px;margin:0 auto;background:var(--bg);border:1px solid var(--border);}
+.modal-topbar{background:var(--bg);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.modal-title{font-size:13px;font-weight:500;color:var(--ink);}
+.modal-actions{display:flex;gap:8px;}
+.btn-print{background:var(--gold);color:#fff;border:none;padding:8px 18px;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;border-radius:2px;}
+.btn-close{background:none;border:1px solid var(--border);color:var(--mid);padding:8px 14px;font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;border-radius:2px;}
+.modal-body{padding:0;}
+
+/* report styles inside modal */
+.rpt{font-family:'Inter',sans-serif;color:var(--ink);}
+.rpt-hero{padding:40px;border-bottom:1px solid var(--border);}
+.rpt-eyebrow{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.rpt-name{font-family:'EB Garamond',serif;font-size:52px;font-weight:400;line-height:1.05;margin-bottom:6px;}
+.rpt-tag{font-size:13px;color:var(--mid);margin-bottom:32px;}
+.rpt-score-row{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:24px;}
+.rpt-gauges{display:flex;gap:20px;flex-wrap:wrap;}
+.rpt-gauge{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.gauge-wrap{width:64px;height:64px;position:relative;}
+.gauge-wrap svg{width:64px;height:64px;transform:rotate(-90deg);}
+.g-track{fill:none;stroke:var(--border);stroke-width:3;}
+.g-fill{fill:none;stroke:var(--gold);stroke-width:3;stroke-linecap:round;}
+.g-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.g-val{font-size:15px;font-weight:600;line-height:1;}
+.g-lbl{font-size:8px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--light);}
+.g-name{font-size:10px;color:var(--mid);}
+.rpt-overall{text-align:right;}
+.rpt-overall-num{font-family:'EB Garamond',serif;font-size:72px;line-height:1;}
+.rpt-overall-den{font-size:12px;color:var(--light);}
+.rpt-verdict{font-size:11px;font-weight:500;color:var(--gold);letter-spacing:.05em;text-transform:uppercase;margin-top:4px;}
+.rpt-sec{padding:32px 40px;border-bottom:1px solid var(--border);}
+.rpt-sec-eye{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.rpt-sec-title{font-family:'EB Garamond',serif;font-size:28px;font-weight:400;margin-bottom:18px;line-height:1.2;}
+.rpt-prose{font-size:14px;color:var(--ink);line-height:1.8;max-width:680px;}
+.funnel-layout{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px;}
+.f-label{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--light);margin-bottom:14px;}
+.f-row{display:flex;align-items:center;gap:10px;margin-bottom:5px;}
+.f-bar{height:36px;display:flex;align-items:center;padding:0 12px;font-size:12px;color:var(--mid);background:var(--bg-soft);border:1px solid var(--border);flex:1;}
+.f-bar.hl{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:500;}
+.f-pct{font-size:12px;color:var(--mid);min-width:36px;text-align:right;}
+.f-pct.hl{color:var(--gold);font-weight:600;}
+.f-arrow{font-size:10px;color:var(--border);margin:0 0 5px 4px;}
+.ctx-stats{display:flex;flex-direction:column;gap:14px;}
+.ctx-stat{border:1px solid var(--border);padding:14px 16px;}
+.ctx-stat-lbl{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--light);margin-bottom:4px;}
+.ctx-stat-val{font-family:'EB Garamond',serif;font-size:26px;line-height:1;margin-bottom:2px;}
+.ctx-stat-desc{font-size:11px;color:var(--mid);line-height:1.5;}
+.ctx-stat-warn{font-size:10px;color:var(--gold);font-style:italic;margin-top:2px;}
+.scale-row{display:flex;justify-content:flex-end;margin-bottom:18px;margin-left:120px;}
+.scale-lbl{flex:1;font-size:10px;color:var(--light);text-align:center;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.scale-lbl:last-child{color:var(--gold);}
+.dim-row-r{margin-bottom:24px;}
+.dim-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;}
+.dim-title-r{font-family:'EB Garamond',serif;font-size:18px;}
+.dim-badge-r{font-size:11px;font-weight:500;}
+.bar-track-r{position:relative;height:9px;background:var(--bg-soft);border:1px solid var(--border);margin-bottom:12px;overflow:visible;}
+.bar-fill-r{height:100%;background:var(--gold);}
+.bar-tgt{position:absolute;top:-3px;width:2px;height:15px;background:var(--ink);opacity:.35;}
+.tgt-chip{position:absolute;top:-24px;transform:translateX(-50%);font-size:9px;color:var(--mid);white-space:nowrap;background:var(--bg);padding:1px 3px;}
+.dim-prose-r{font-size:13px;color:var(--mid);line-height:1.7;padding:12px 14px;background:var(--bg-soft);border-left:2px solid var(--border);}
+.counselor-card-r{background:var(--bg-soft);border:1px solid var(--border);padding:20px 24px;}
+.counselor-lbl-r{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.counselor-text-r{font-size:14px;color:var(--ink);line-height:1.8;}
+.proj-tbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:24px;}
+.proj-tbl th{text-align:left;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--light);padding:6px 10px;border-bottom:1px solid var(--border);}
+.proj-tbl td{padding:10px;border-bottom:1px solid var(--bg-soft);vertical-align:middle;}
+.pbar-row{display:flex;align-items:center;gap:6px;margin:2px 0;font-size:10px;color:var(--light);}
+.pbar-track{flex:1;height:5px;background:var(--border);border-radius:2px;overflow:hidden;}
+.pbar-t{height:100%;background:#C8C0B0;}
+.pbar-p{height:100%;background:var(--gold);}
+.pval{min-width:20px;font-size:11px;}
+.pval.p{color:var(--gold);font-weight:600;}
+.proj-cols-r{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.pcol{border:1px solid var(--border);padding:18px 20px;}
+.pcol-lbl{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--light);margin-bottom:8px;}
+.pcol.act .pcol-lbl{color:var(--gold);}
+.pcol-h{font-family:'EB Garamond',serif;font-size:16px;margin-bottom:8px;line-height:1.3;}
+.pcol-body{font-size:12px;color:var(--mid);line-height:1.6;margin-bottom:10px;}
+.plist{list-style:none;font-size:11px;display:flex;flex-direction:column;gap:4px;}
+.plist li{display:flex;gap:5px;color:var(--mid);}
+.plist li::before{content:'·';color:var(--gold);font-weight:bold;flex-shrink:0;}
+.plist.neg li{text-decoration:line-through;opacity:.65;}
+.plist.neg li::before{color:var(--light);}
+.q-card-r{border:1px solid var(--border);padding:20px 24px;}
+.q-num-r{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.q-q-r{font-family:'EB Garamond',serif;font-size:18px;margin-bottom:10px;line-height:1.3;}
+.q-a-r{font-size:13px;color:var(--mid);line-height:1.7;}
+.parent-note-r{background:var(--bg-soft);border:1px solid var(--border);padding:24px 28px;}
+.parent-lbl-r{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.parent-h-r{font-family:'EB Garamond',serif;font-size:20px;margin-bottom:10px;}
+.parent-txt-r{font-size:13px;color:var(--mid);line-height:1.8;}
+.rpt-cta{background:var(--ink);padding:40px;text-align:center;}
+.rpt-cta-h{font-family:'EB Garamond',serif;font-size:32px;color:#fff;line-height:1.15;margin-bottom:4px;}
+.rpt-cta-h em{font-style:italic;color:var(--gold-light);}
+.rpt-cta-sub{font-size:14px;color:rgba(255,255,255,.5);line-height:1.8;margin:12px 0 20px;}
+.rpt-cta-sub strong{color:rgba(255,255,255,.85);}
+.rpt-cta-btn{display:inline-block;background:var(--gold);color:#fff;font-size:14px;font-weight:500;padding:14px 32px;text-decoration:none;border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Yocket <span>Elite</span></div>
+    <div class="login-sub">Admin Access</div>
+    <input type="password" class="login-input" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()" />
+    <button class="login-btn" onclick="doLogin()">Sign in</button>
+    <p class="login-err" id="login-err">Incorrect password.</p>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin-screen">
+  <div class="admin-header">
+    <div style="display:flex;align-items:center">
+      <div class="admin-logo">Yocket <span>Elite</span></div>
+      <span class="admin-tag">Admin</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-dl" onclick="downloadCSV()">Download CSV</button>
+      <button class="btn-logout" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+  <div class="admin-body">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" id="stat-total">-</div><div class="stat-label">Total submissions</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-today">-</div><div class="stat-label">Today</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-avg">-</div><div class="stat-label">Avg score</div><div class="stat-sub">out of 100</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-week">-</div><div class="stat-label">This week</div></div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-header">
+        <div class="table-title">All submissions</div>
+        <input type="text" class="search-input" placeholder="Search by name or email..." oninput="filterTable(this.value)" />
+      </div>
+      <div id="table-container"><div class="loading-state">Loading submissions...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div id="report-modal">
+  <div class="modal-inner">
+    <div class="modal-topbar">
+      <div class="modal-title" id="modal-title">Report</div>
+      <div class="modal-actions">
+        <button class="btn-print" onclick="printReport()">Print / Save PDF</button>
+        <button class="btn-close" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+var SUPABASE_URL='https://mtwjsfttmzoecxdnqpcy.supabase.co';
+var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10d2pzZnR0bXpvZWN4ZG5xcGN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NzQ3NDYsImV4cCI6MjA5NjE1MDc0Nn0.zrYp_97_hUf4eoyGAJPWsxiqTh-33iYeXDhVu9rgYPU';
+var allRows=[];
+
+function doLogin(){
+  var pw=document.getElementById('pw-input').value;
+  if(pw==='yocket2026'){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-screen').style.display='block';
+    loadData();
+  } else {
+    document.getElementById('login-err').style.display='block';
+  }
+}
+
+function logout(){
+  document.getElementById('admin-screen').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('pw-input').value='';
+}
+
+async function loadData(){
+  try{
+    var res=await fetch(SUPABASE_URL+'/rest/v1/vs_submissions?select=*&order=created_at.desc',{headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    allRows=await res.json();
+    renderStats(allRows);
+    renderTable(allRows);
+  }catch(e){
+    document.getElementById('table-container').innerHTML='<div class="empty-state">Error loading data. Check console.</div>';
+    console.error(e);
+  }
+}
+
+function renderStats(rows){
+  document.getElementById('stat-total').textContent=rows.length;
+  var today=new Date().toISOString().slice(0,10);
+  var todayCount=rows.filter(function(r){return(r.created_at||'').slice(0,10)===today;}).length;
+  document.getElementById('stat-today').textContent=todayCount;
+  var weekAgo=new Date(Date.now()-7*24*60*60*1000).toISOString();
+  var weekCount=rows.filter(function(r){return(r.created_at||'')>=weekAgo;}).length;
+  document.getElementById('stat-week').textContent=weekCount;
+  if(rows.length){
+    var avg=rows.reduce(function(s,r){return s+(r.overall_score||0);},0)/rows.length;
+    document.getElementById('stat-avg').textContent=Math.round(avg);
+  } else {
+    document.getElementById('stat-avg').textContent='-';
+  }
+}
+
+function renderTable(rows){
+  if(!rows.length){
+    document.getElementById('table-container').innerHTML='<div class="empty-state">No submissions yet.</div>';
+    return;
+  }
+  var html='<table class="tbl"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Grade</th><th>School</th><th>Targets</th><th>Major</th><th>Score</th><th>Date</th><th></th></tr></thead><tbody>';
+  rows.forEach(function(r,i){
+    var score=r.overall_score||0;
+    var scoreClass=score>=75?'score-high':score>=50?'score-mid':'score-low';
+    var date=r.created_at?new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'-';
+    html+='<tr>';
+    html+='<td style="font-weight:500">'+esc(r.name||'-')+'</td>';
+    html+='<td style="color:var(--mid)">'+esc(r.email||'-')+'</td>';
+    html+='<td style="color:var(--mid)">'+esc(r.phone||'-')+'</td>';
+    html+='<td>'+esc(r.grade||'-')+'</td>';
+    html+='<td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(r.school||'-')+'</td>';
+    html+='<td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--mid)">'+esc(r.target_universities||'-')+'</td>';
+    html+='<td style="color:var(--mid)">'+esc(r.intended_major||'-')+'</td>';
+    html+='<td><span class="score-pill '+scoreClass+'">'+score+'</span></td>';
+    html+='<td style="color:var(--light);white-space:nowrap">'+date+'</td>';
+    html+='<td><button class="btn-view" onclick="viewReport('+i+')">View report</button></td>';
+    html+='</tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('table-container').innerHTML=html;
+}
+
+function filterTable(q){
+  if(!q.trim()){renderTable(allRows);return;}
+  var lq=q.toLowerCase();
+  var filtered=allRows.filter(function(r){
+    return (r.name||'').toLowerCase().includes(lq)||(r.email||'').toLowerCase().includes(lq)||(r.school||'').toLowerCase().includes(lq);
+  });
+  renderTable(filtered);
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function downloadCSV(){
+  if(!allRows.length){alert('No submissions to download.');return;}
+  var cols=['id','created_at','name','email','phone','grade','school','curriculum','target_universities','intended_major','academic_standing','extracurriculars','athletics','months_to_apply','overall_score','academic_score','extracurricular_score','athletic_score','personal_score'];
+  var lines=[cols.join(',')];
+  allRows.forEach(function(r){
+    lines.push(cols.map(function(c){
+      var v=String(r[c]||'').replace(/"/g,'""');
+      return '"'+v+'"';
+    }).join(','));
+  });
+  var blob=new Blob([lines.join('\n')],{type:'text/csv'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='yocket-submissions-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+}
+
+function viewReport(idx){
+  var r=allRows[idx];
+  if(!r)return;
+  var fd={
+    name:r.name||'',grade:r.grade||'',school:r.school||'',
+    curriculum:r.curriculum||'',targets:r.target_universities||'',
+    major:r.intended_major||'',academic:r.academic_standing||'',
+    awards:r.extracurriculars||'',eca:r.extracurriculars||'',
+    leadership:r.personal_background||'Not yet',
+    sport:r.athletics||'Not really',timeline:r.months_to_apply||'2-3 years',
+    parent:'',email:r.email||'',phone:r.phone||''
+  };
+  var sc={
+    academic:parseFloat(r.academic_score)||3.0,
+    ec:parseFloat(r.extracurricular_score)||3.0,
+    athletic:parseFloat(r.athletic_score)||4.0,
+    personal:parseFloat(r.personal_score)||3.0,
+    overall:r.overall_score||50,
+    verdict:r.overall_score>=75?'Competitive':r.overall_score>=58?'Building':r.overall_score>=42?'Needs Work':'Needs Urgent Work'
+  };
+  var rpt=buildReport(fd,sc);
+  document.getElementById('modal-title').textContent='Report: '+fd.name;
+  document.getElementById('modal-body').innerHTML=renderReportHTML(fd,sc,rpt);
+  document.getElementById('report-modal').style.display='block';
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  document.getElementById('report-modal').style.display='none';
+  document.body.style.overflow='';
+}
+
+function printReport(){
+  var content=document.getElementById('modal-body').innerHTML;
+  var w=window.open('','_blank');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Yocket Elite Report</title><style>@import url(\'https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap\');*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Inter,sans-serif;color:#1A1A1A;}</style></head><body>'+content+'</body></html>');
+  w.document.close();
+  setTimeout(function(){w.print();},800);
+}
+
+function buildReport(fd,sc){
+  var name=fd.name,grade=fd.grade,school=fd.school,targets=fd.targets,major=fd.major,timeline=fd.timeline;
+  var mmap={'Less than 12 months':10,'12-18 months':15,'2-3 years':28,'More than 3 years':42};
+  var months=mmap[timeline]||20;
+  var startWhen=months<=12?'Immediately':'Right now';
+  var startDesc=months<=12?(grade+' leaves very little runway. Every month without a plan costs application options.'):(grade+' is the right time to lock in a direction and start building real credentials.');
+  var t1=(targets||'top universities').split(',')[0].trim();
+  var contextProse=name+', a '+grade+' student at '+school+', targeting '+t1+' for '+major+'. Roughly '+months+' months until applications open. '+(months<=14?'The window is tight. Every decision from here matters.':'Enough time to build something genuinely impressive - if the next move is the right one.');
+
+  var dp={};
+  dp.academic=sc.academic<=2.0?'Top academic standing with external validation. The foundation is strong. One more credential beyond '+school+' would make this exceptional.':sc.academic<=2.5?'Good academic standing and some external recognition. The gap to the T10 benchmark is closeable. Focus on one external credential that reaches outside '+school+'.':sc.academic<=3.0?'Solid academic performance within '+school+', but no external signal yet. One national competition result would change this dimension meaningfully.':'Academic performance needs work. This is the hardest dimension to change quickly - it requires consistent effort over time.';
+  dp.ec=sc.ec<=2.0?'Strong extracurricular depth with real leadership and external recognition. Competitive at the T10 level. Ensure activities tell one coherent story.':sc.ec<=2.5?'Meaningful involvement and some leadership. The gap is about external proof - someone outside '+school+' needs to have noticed the work.':sc.ec<=3.0?'Activities are present but have not produced external recognition or clear leadership with impact. Pick one and go significantly deeper.':'Extracurricular depth is nascent. Commit to one direction in the next few months and go deep, not wide.';
+  dp.athletic=sc.athletic<=2.0?'Competitive athletic achievement is a genuine differentiator. Ensure coaches at target schools are contacted.':sc.athletic<=3.0?'Active athletic involvement shows commitment and discipline. For a '+major+' applicant, this adds character.':'Limited athletic involvement - fine for a '+major+' applicant. Time is better invested in other dimensions.';
+  dp.personal=sc.personal<=2.0?'Strong maturity and clear sense of direction. Ensure this comes through in essays - evidenced through specific moments.':sc.personal<=2.5?'There are strong anchor points in '+name+"'s story. One or two specific experiences showing maturity or contribution to others would lift this.":'The personal dimension is still forming - expected at '+grade+'. The next 12-18 months are about gaining real experience.';
+
+  var hasL=(fd.leadership||'').indexOf('Yes')!==-1;
+  var narrative=hasL?(name+"'s profile has a real centre of gravity with leadership and involvement. What is missing is the thread connecting them into one argument. The next 12 months are about finding that question and building the answer."):('Right now '+name+"'s profile reads as a list of genuine interests. What has not emerged is the why. The story T10 programmes respond to is a student who saw a specific problem, built the skill to address it, and created something whose impact reaches beyond "+school+".");
+
+  var pA=Math.max(1.5,sc.academic-(months>=28?0.5:0.25));
+  var pE=Math.max(1.0,sc.ec-(months>=14?0.75:0.5));
+  var pP=Math.max(1.5,sc.personal-(months>=14?0.5:0.25));
+
+  var actBody=months>=20?('By application year, '+name+"'s profile could include: one external competition result, a project with real-world impact, and essays grounded in two years of directed effort."):('The highest-leverage move is to commit immediately to one direction and close the biggest gap. A well-executed plan still produces a competitive file.');
+  var waitBody='A year of maintaining the current trajectory compresses the build into the final term. The multi-year arc that admissions officers look for does not have time to form.';
+
+  var dims=[{d:'academic',s:sc.academic},{d:'ec',s:sc.ec},{d:'personal',s:sc.personal}];
+  dims.sort(function(a,b){return b.s-a.s;});
+  var weakest=dims[0].d;
+  var qmap={
+    academic:{q:'Is the academic gap to '+t1+' closeable from '+school+'?',a:'Yes - but only through external proof. Top marks at '+school+' are necessary but not sufficient. An Olympiad, selective programme, or national competition result closes this. The search for the right one should start immediately.'},
+    ec:{q:'Should '+name+' do more activities, or go deeper on fewer?',a:'Depth, every time. The move that changes a file is not a fourth activity - it is taking one existing activity and making it undeniably significant. Pick the most promising one and ask: what would this look like if taken seriously for 18 months?'},
+    personal:{q:"What is the one story "+name+"'s application needs to tell?",a:'Every competitive application tells one story. Right now that story is still taking shape. The raw material is there. A deliberate decision about which thread to pull - made in conversation with someone who has read thousands of these files - is the most valuable next step.'}
+  };
+
+  return{contextProse:contextProse,months:months,startWhen:startWhen,startDesc:startDesc,dimProse:dp,narrative:narrative,projAcademic:pA,projEc:pE,projAthletic:sc.athletic,projPersonal:pP,actBody:actBody,waitBody:waitBody,chosenQ:qmap[weakest],parentNote:''};
+}
+
+function renderReportHTML(fd,sc,rpt){
+  var now=new Date();
+  var dateStr=now.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  var dimTargets={academic:2.0,ec:1.5,athletic:4.0,personal:2.0};
+  var dimLabels={academic:'Academic',ec:'Extracurricular',athletic:'Athletic',personal:'Personal'};
+  var dimKeys=['academic','ec','athletic','personal'];
+  var tlabel=fd.timeline==='Less than 12 months'?'12mo':fd.timeline==='12-18 months'?'18mo':fd.timeline==='2-3 years'?'2.5yr':'3yr+';
+
+  // gauges
+  var gaugesHTML='';
+  dimKeys.forEach(function(dim){
+    var score=sc[dim];
+    var pct=((4-score)/3)*100;
+    var circ=2*Math.PI*24;
+    var offset=circ*(1-pct/100);
+    var lblMap={1:'EXCEPTIONAL',1.5:'STRONG',2:'STRONG',2.5:'BUILDING',3:'DEVELOPING',3.5:'NASCENT',4:'NASCENT'};
+    var lbl=lblMap[score]||'BUILDING';
+    gaugesHTML+='<div class="rpt-gauge"><div class="gauge-wrap"><svg viewBox="0 0 64 64"><circle class="g-track" cx="32" cy="32" r="24"/><circle class="g-fill" cx="32" cy="32" r="24" stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+offset.toFixed(1)+'"/></svg><div class="g-center"><div class="g-val">'+score+'</div><div class="g-lbl">'+lbl+'</div></div></div><div class="g-name">'+dimLabels[dim]+'</div></div>';
+  });
+
+  // dim rows
+  var dimRowsHTML='';
+  dimKeys.forEach(function(dim){
+    var score=sc[dim];var tgt=dimTargets[dim];
+    var fillPct=((4-score)/3)*100;var tgtPct=((4-tgt)/3)*100;
+    var color=score<=2?'#1E6B3C':score<=3?'#C9922A':'#C0392B';
+    var lbl=score<=1.5?'Exceptional':score<=2?'Strong':score<=2.5?'Building':score<=3?'Developing':'Nascent';
+    dimRowsHTML+='<div class="dim-row-r"><div class="dim-hdr"><div class="dim-title-r">'+dimLabels[dim]+'</div><div class="dim-badge-r" style="color:'+color+'">'+lbl+' - '+score+' / Target: '+tgt+'</div></div><div class="bar-track-r"><div class="bar-fill-r" style="width:'+fillPct+'%"></div><div class="bar-tgt" style="left:'+tgtPct+'%"><span class="tgt-chip">Target: '+tgt+'</span></div></div><div class="dim-prose-r">'+rpt.dimProse[dim]+'</div></div>';
+  });
+
+  // projection
+  var pdata=[{dim:'Academic',today:sc.academic,proj:rpt.projAcademic},{dim:'Extracurricular',today:sc.ec,proj:rpt.projEc},{dim:'Athletic',today:sc.athletic,proj:rpt.projAthletic},{dim:'Personal',today:sc.personal,proj:rpt.projPersonal}];
+  var projTblHTML='<thead><tr><th>Dimension</th><th>Today to '+tlabel+'</th><th style="text-align:right">Today</th><th style="text-align:right">Projected</th></tr></thead><tbody>'+pdata.map(function(p){var tw=((4-p.today)/3)*100;var pw=((4-p.proj)/3)*100;return'<tr><td style="font-weight:500">'+p.dim+'</td><td><div class="pbar-row"><span style="min-width:36px;font-size:10px">Today</span><div class="pbar-track"><div class="pbar-t" style="width:'+tw+'%"></div></div></div><div class="pbar-row"><span style="min-width:36px;font-size:10px">'+tlabel+'</span><div class="pbar-track"><div class="pbar-p" style="width:'+pw+'%"></div></div></div></td><td style="text-align:right" class="pval">'+p.today+'</td><td style="text-align:right" class="pval p">'+p.proj+'</td></tr>';}).join('')+'</tbody>';
+
+  var t1=(fd.targets||'top universities').split(',')[0].trim();
+  var verdictColor=sc.overall>=75?'#1E6B3C':sc.overall>=58?'#C9922A':'#C0392B';
+
+  return '<div class="rpt">'+
+    '<div class="rpt-hero">'+
+      '<p class="rpt-eyebrow">YOCKET ELITE - PROFILE ASSESSMENT</p>'+
+      '<h1 class="rpt-name">'+esc(fd.name)+'.</h1>'+
+      '<p class="rpt-tag">'+esc(fd.grade)+' - '+esc(fd.school)+' - Targeting '+esc(t1)+' - '+esc(fd.major)+'</p>'+
+      '<div class="rpt-score-row">'+
+        '<div class="rpt-gauges">'+gaugesHTML+'</div>'+
+        '<div class="rpt-overall"><div class="rpt-overall-num">'+sc.overall+'</div><div class="rpt-overall-den">out of 100</div><div class="rpt-verdict" style="color:'+verdictColor+'">'+sc.verdict+'</div></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="rpt-sec">'+
+      '<p class="rpt-sec-eye">01 - CONTEXT</p>'+
+      '<h2 class="rpt-sec-title">The Room You\'re Trying to Enter</h2>'+
+      '<p class="rpt-prose">'+esc(rpt.contextProse)+'</p>'+
+      '<div class="funnel-layout">'+
+        '<div><p class="f-label">How many international applicants make it into T10 globally</p>'+
+          '<div class="f-row"><div class="f-bar" style="width:100%">All international applicants</div><span class="f-pct">100%</span></div>'+
+          '<div class="f-arrow">&#9660;</div>'+
+          '<div class="f-row"><div class="f-bar" style="width:40%">Academically competitive</div><span class="f-pct">~40%</span></div>'+
+          '<div class="f-arrow">&#9660;</div>'+
+          '<div class="f-row"><div class="f-bar" style="width:18%">Strong profile + grades</div><span class="f-pct">4.5%</span></div>'+
+          '<div class="f-arrow">&#9660;</div>'+
+          '<div class="f-row"><div class="f-bar hl" style="width:8%">Admitted</div><span class="f-pct hl">~1%</span></div>'+
+        '</div>'+
+        '<div class="ctx-stats">'+
+          '<div class="ctx-stat"><p class="ctx-stat-lbl">Months left</p><p class="ctx-stat-val">'+rpt.months+'</p><p class="ctx-stat-desc">Enough to commit to a direction and build one clear credential.</p></div>'+
+          '<div class="ctx-stat"><p class="ctx-stat-lbl">When to start</p><p class="ctx-stat-val" style="font-size:20px;font-family:\'EB Garamond\',serif">'+rpt.startWhen+'</p><p class="ctx-stat-desc">'+esc(rpt.startDesc)+'</p></div>'+
+          '<div class="ctx-stat"><p class="ctx-stat-lbl">Have a coherent strategy</p><p class="ctx-stat-val">&lt;8%</p><p class="ctx-stat-desc">A plan puts you ahead of 90%+ of peers.</p></div>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="rpt-sec">'+
+      '<p class="rpt-sec-eye">02 - THE ASSESSMENT</p>'+
+      '<h2 class="rpt-sec-title">Where You Stand Today</h2>'+
+      '<p class="rpt-prose">Four Harvard dimensions. Scale 4 to 1, lower is better.</p>'+
+      '<div style="margin-top:24px">'+
+        '<div class="scale-row"><span class="scale-lbl">4 Nascent</span><span class="scale-lbl">3 Developing</span><span class="scale-lbl">2 Strong</span><span class="scale-lbl">1 Exceptional</span></div>'+
+        dimRowsHTML+
+      '</div>'+
+    '</div>'+
+    '<div class="rpt-sec">'+
+      '<p class="rpt-sec-eye">03 - NARRATIVE COHERENCE</p>'+
+      '<h2 class="rpt-sec-title">Does This Profile Tell One Story, or Five?</h2>'+
+      '<div class="counselor-card-r"><p class="counselor-lbl-r">The Counsellor\'s Read</p><p class="counselor-text-r">'+esc(rpt.narrative)+'</p></div>'+
+    '</div>'+
+    '<div class="rpt-sec">'+
+      '<p class="rpt-sec-eye">04 - FORWARD PROJECTION</p>'+
+      '<h2 class="rpt-sec-title">What If You Act Now</h2>'+
+      '<table class="proj-tbl">'+projTblHTML+'</table>'+
+      '<div class="proj-cols-r">'+
+        '<div class="pcol act"><p class="pcol-lbl">You start now</p><h3 class="pcol-h">Every dimension closes.</h3><p class="pcol-body">'+esc(rpt.actBody)+'</p><ul class="plist"><li>One clear direction built</li><li>External recognition earned</li><li>Essays grounded in real evidence</li><li>Strong Early Decision possible</li></ul></div>'+
+        '<div class="pcol"><p class="pcol-lbl">You wait a year</p><h3 class="pcol-h">Smaller gains. Narrower options.</h3><p class="pcol-body">'+esc(rpt.waitBody)+'</p><ul class="plist neg"><li>Target tier becomes harder</li><li>Profile reads as potential, not proof</li><li>Grade 12 becomes a sprint</li><li>Early Decision unlikely</li></ul></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="rpt-sec">'+
+      '<p class="rpt-sec-eye">05 - ONE QUESTION WORTH SITTING WITH</p>'+
+      '<h2 class="rpt-sec-title">This Report Is a Starting Point.</h2>'+
+      '<div class="q-card-r"><p class="q-num-r">The Question Worth Sitting With</p><h3 class="q-q-r">'+esc(rpt.chosenQ.q)+'</h3><p class="q-a-r">'+esc(rpt.chosenQ.a)+'</p></div>'+
+    '</div>'+
+    '<div class="rpt-cta">'+
+      '<h2 class="rpt-cta-h">This report is a diagnosis.</h2>'+
+      '<h2 class="rpt-cta-h"><em>Not a prescription.</em></h2>'+
+      '<p class="rpt-cta-sub">A score tells you where your child is today.<br><strong>A plan tells you what to do next.</strong></p>'+
+      '<a href="https://calendly.com/sandesh-vp-yocket/new-meeting" target="_blank" class="rpt-cta-btn">Book a FREE session with Aditi &#8594;</a>'+
+    '</div>'+
+  '</div>';
+}
+</script>
+</body>
+</html>
