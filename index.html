@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yocket Elite · Profile Builder</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap');
+:root{
+  --gold:#C9922A;--gold-light:#E8B84B;--gold-pale:#FBF4E8;
+  --ink:#1A1A1A;--mid:#5A5A5A;--light:#9A9A9A;
+  --border:#E8E4DC;--bg:#FFFFFF;--bg-soft:#FAFAF8;
+  --red:#C0392B;--amber:#D47A1A;--green:#1E6B3C;
+  --cream:#F5F0E8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;}
+
+/* LANDING */
+#landing{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;}
+.logo-bar{font-family:'EB Garamond',serif;font-size:22px;letter-spacing:.05em;color:var(--ink);margin-bottom:56px;}
+.logo-bar span{color:var(--gold);}
+.landing-eye{font-size:11px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;}
+.landing-h{font-family:'EB Garamond',serif;font-size:clamp(34px,6vw,62px);font-weight:500;color:var(--ink);line-height:1.15;max-width:680px;margin-bottom:20px;}
+.landing-sub{font-size:15px;color:var(--mid);max-width:500px;line-height:1.75;margin-bottom:44px;}
+.btn-gold{display:inline-block;background:var(--gold);color:#fff;font-size:15px;font-weight:500;padding:16px 40px;border:none;cursor:pointer;letter-spacing:.02em;transition:background .2s;border-radius:2px;font-family:'Inter',sans-serif;}
+.btn-gold:hover{background:var(--gold-light);}
+.landing-trust{margin-top:40px;font-size:12px;color:var(--light);}
+
+/* FORM */
+#form-section{display:none;min-height:100vh;background:var(--bg-soft);}
+.form-header{background:var(--bg);border-bottom:1px solid var(--border);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;}
+.form-logo{font-family:'EB Garamond',serif;font-size:18px;color:var(--ink);}
+.form-logo span{color:var(--gold);}
+.prog-wrap{flex:1;max-width:380px;margin:0 24px;}
+.prog-track{height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--gold);transition:width .4s ease;border-radius:2px;}
+.prog-lbl{font-size:11px;color:var(--light);margin-top:5px;text-align:right;}
+.form-body{max-width:600px;margin:0 auto;padding:56px 24px 80px;}
+.step{display:none;}
+.step.active{display:block;}
+.step-eye{font-size:11px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.step-q{font-family:'EB Garamond',serif;font-size:clamp(20px,4vw,30px);font-weight:500;color:var(--ink);line-height:1.3;margin-bottom:7px;}
+.step-hint{font-size:13px;color:var(--mid);margin-bottom:24px;line-height:1.6;}
+.form-input{width:100%;padding:13px 15px;font-size:15px;font-family:'Inter',sans-serif;border:1.5px solid var(--border);background:var(--bg);color:var(--ink);outline:none;transition:border-color .2s;border-radius:2px;}
+.form-input:focus{border-color:var(--gold);}
+.form-textarea{width:100%;padding:13px 15px;font-size:14px;font-family:'Inter',sans-serif;border:1.5px solid var(--border);background:var(--bg);color:var(--ink);outline:none;resize:vertical;min-height:100px;transition:border-color .2s;border-radius:2px;line-height:1.6;}
+.form-textarea:focus{border-color:var(--gold);}
+.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;}
+.opt-btn{padding:13px 15px;border:1.5px solid var(--border);background:var(--bg);color:var(--ink);font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;text-align:left;transition:all .15s;border-radius:2px;line-height:1.4;}
+.opt-btn:hover{border-color:var(--gold);background:var(--gold-pale);}
+.opt-btn.selected{border-color:var(--gold);background:var(--gold-pale);font-weight:500;}
+.chips-wrap{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:10px;}
+.chip{padding:9px 16px;border:1.5px solid var(--border);background:var(--bg);color:var(--ink);font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;border-radius:20px;transition:all .15s;}
+.chip:hover{border-color:var(--gold);background:var(--gold-pale);}
+.chip.selected{border-color:var(--gold);background:var(--gold);color:#fff;font-weight:500;}
+.sel-display{font-size:12px;color:var(--gold);margin-top:4px;min-height:16px;}
+.nav-row{display:flex;align-items:center;gap:12px;margin-top:28px;}
+.btn-next{background:var(--gold);color:#fff;border:none;padding:13px 30px;font-size:14px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;transition:background .2s;border-radius:2px;}
+.btn-next:hover{background:var(--gold-light);}
+.btn-back{background:none;border:1.5px solid var(--border);color:var(--mid);padding:13px 22px;font-size:14px;font-family:'Inter',sans-serif;cursor:pointer;border-radius:2px;}
+.btn-back:hover{border-color:var(--mid);color:var(--ink);}
+.err{font-size:12px;color:var(--red);margin-top:7px;display:none;}
+
+/* GENERATING */
+#generating{display:none;min-height:100vh;background:var(--bg);align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:40px;}
+.gen-logo{font-family:'EB Garamond',serif;font-size:20px;color:var(--ink);margin-bottom:56px;}
+.gen-logo span{color:var(--gold);}
+.gen-spinner{width:38px;height:38px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 28px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.gen-h{font-family:'EB Garamond',serif;font-size:26px;color:var(--ink);margin-bottom:10px;}
+.gen-s{font-size:13px;color:var(--light);max-width:340px;}
+
+/* REPORT */
+#report-section{display:none;background:var(--bg);}
+.rpt-header{background:var(--bg);border-bottom:1px solid var(--border);padding:18px 40px;display:flex;align-items:center;justify-content:space-between;}
+.rpt-logo{font-family:'EB Garamond',serif;font-size:20px;color:var(--ink);}
+.rpt-logo span{color:var(--gold);}
+.rpt-meta{font-size:11px;color:var(--light);}
+
+/* Hero */
+.rpt-hero{padding:44px 40px 36px;border-bottom:1px solid var(--border);max-width:900px;margin:0 auto;}
+.rpt-eyebrow{font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.rpt-name{font-family:'EB Garamond',serif;font-size:clamp(38px,7vw,70px);font-weight:400;color:var(--ink);line-height:1.0;margin-bottom:6px;}
+.rpt-tag{font-size:13px;color:var(--mid);margin-bottom:32px;}
+.hero-scores{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:28px;}
+.dim-rings{display:flex;gap:20px;flex-wrap:wrap;}
+.dim-ring-item{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.ring-wrap{width:68px;height:68px;position:relative;}
+.ring-wrap svg{width:68px;height:68px;transform:rotate(-90deg);}
+.ring-track{fill:none;stroke:var(--border);stroke-width:3;}
+.ring-fill{fill:none;stroke:var(--gold);stroke-width:3;stroke-linecap:round;}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.ring-val{font-size:15px;font-weight:600;color:var(--ink);line-height:1;}
+.ring-sub{font-size:8px;color:var(--light);letter-spacing:.04em;}
+.ring-label{font-size:10px;color:var(--mid);}
+.overall-box{text-align:right;}
+.overall-big{font-family:'EB Garamond',serif;font-size:76px;line-height:1;color:var(--ink);}
+.overall-den{font-size:12px;color:var(--light);margin-top:2px;}
+.overall-verdict{font-size:11px;font-weight:600;margin-top:5px;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:10px;display:inline-block;}
+.verdict-competitive{background:#FBF4E8;color:var(--amber);}
+.verdict-building{background:#FDEAEA;color:var(--red);}
+.verdict-needs{background:#FDEAEA;color:var(--red);}
+
+/* Sections */
+.rpt-sec{max-width:900px;margin:0 auto;padding:44px 40px;border-bottom:1px solid var(--border);}
+.sec-eye{font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:7px;}
+.sec-title{font-family:'EB Garamond',serif;font-size:clamp(20px,4vw,32px);font-weight:400;color:var(--ink);margin-bottom:18px;line-height:1.2;}
+.sec-prose{font-size:14px;color:var(--ink);line-height:1.85;max-width:680px;}
+
+/* Funnel - FIXED: text always below/outside fill, never overlapping */
+.funnel-layout{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:28px;align-items:start;}
+.funnel-lbl{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--light);margin-bottom:14px;}
+.f-row{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.f-arrow{font-size:10px;color:var(--border);margin:2px 0 4px 3px;}
+.f-bar-wrap{flex:1;}
+.f-bar-track{height:36px;background:var(--bg-soft);border:1px solid var(--border);position:relative;overflow:hidden;}
+.f-bar-fill{height:100%;position:absolute;left:0;top:0;background:var(--gold);}
+.f-bar-label{position:absolute;inset:0;display:flex;align-items:center;padding:0 10px;font-size:12px;color:var(--ink);font-weight:500;white-space:nowrap;}
+.f-num{font-size:13px;font-weight:600;color:var(--mid);min-width:32px;text-align:right;flex-shrink:0;}
+.f-num.hl{color:var(--gold);}
+.ctx-stats{display:flex;flex-direction:column;gap:14px;}
+.ctx-stat{border:1px solid var(--border);padding:16px 18px;}
+.ctx-stat-lbl{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--light);margin-bottom:4px;}
+.ctx-stat-val{font-family:'EB Garamond',serif;font-size:26px;color:var(--ink);line-height:1;margin-bottom:3px;}
+.ctx-stat-desc{font-size:11px;color:var(--mid);line-height:1.5;}
+.ctx-stat-warn{font-size:10px;color:var(--amber);font-style:italic;margin-top:3px;}
+
+/* Score card */
+.scorecard-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px;}
+.sc-item{border:1px solid var(--border);padding:18px 20px;}
+.sc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.sc-name{font-family:'EB Garamond',serif;font-size:18px;color:var(--ink);}
+.sc-pill{font-size:11px;font-weight:500;padding:3px 10px;border-radius:10px;}
+.pill-green{background:#E8F5EE;color:var(--green);}
+.pill-amber{background:#FBF4E8;color:var(--amber);}
+.pill-red{background:#FDEAEA;color:var(--red);}
+.pill-grey{background:#F5F5F5;color:var(--light);}
+.sc-score-row{display:flex;align-items:baseline;gap:5px;margin-bottom:10px;}
+.sc-score-big{font-family:'EB Garamond',serif;font-size:32px;line-height:1;}
+.sc-score-den{font-size:12px;color:var(--light);}
+.sc-score-need{font-size:11px;color:var(--mid);margin-left:auto;}
+.sc-bar-track{height:8px;background:var(--bg-soft);border:1px solid var(--border);border-radius:4px;position:relative;overflow:visible;margin-bottom:8px;}
+.sc-bar-fill{height:100%;border-radius:4px;}
+.sc-bar-marker{position:absolute;top:-3px;width:2px;height:14px;background:var(--ink);opacity:.25;border-radius:1px;}
+.sc-bar-marker-lbl{position:absolute;top:-20px;transform:translateX(-50%);font-size:9px;color:var(--light);white-space:nowrap;}
+.sc-verdict-tag{font-size:11px;font-weight:500;padding:4px 9px;border-radius:4px;display:inline-block;margin-bottom:9px;}
+.sc-prose{font-size:12px;color:var(--mid);line-height:1.7;}
+.athletic-note{font-size:12px;color:var(--mid);line-height:1.6;margin-bottom:10px;padding:10px 12px;background:var(--bg-soft);border-left:2px solid var(--border);}
+
+/* Narrative */
+.counselor-card{background:var(--bg-soft);border:1px solid var(--border);padding:24px 28px;}
+.counselor-eye{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.counselor-text{font-size:14px;color:var(--ink);line-height:1.85;}
+
+/* Projection */
+.proj-tbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:24px;}
+.proj-tbl th{text-align:left;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--light);padding:6px 9px;border-bottom:1px solid var(--border);}
+.proj-tbl td{padding:9px;border-bottom:1px solid var(--bg-soft);vertical-align:middle;}
+.pb-row{display:flex;align-items:center;gap:6px;margin:2px 0;font-size:10px;color:var(--light);}
+.pb-track{flex:1;height:5px;background:var(--border);border-radius:2px;overflow:hidden;}
+.pb-now{height:100%;background:#C8C0B0;border-radius:2px;}
+.pb-proj{height:100%;background:var(--gold);border-radius:2px;}
+.pv{min-width:28px;font-size:11px;text-align:right;}
+.pv.p{color:var(--gold);font-weight:600;}
+.proj-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;}
+.pcol{border:1px solid var(--border);padding:20px 22px;}
+.pcol-eye{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--light);margin-bottom:8px;}
+.pcol.act .pcol-eye{color:var(--gold);}
+.pcol-h{font-family:'EB Garamond',serif;font-size:16px;margin-bottom:8px;line-height:1.3;}
+.pcol-body{font-size:12px;color:var(--mid);line-height:1.65;margin-bottom:10px;}
+.plist-head{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--light);margin-bottom:6px;}
+.plist{list-style:none;font-size:12px;display:flex;flex-direction:column;gap:5px;}
+.plist li{display:flex;gap:7px;color:var(--mid);align-items:baseline;}
+.plist-ic-g{color:var(--green);font-weight:bold;flex-shrink:0;}
+.plist-ic-r{color:var(--red);flex-shrink:0;}
+
+/* Parent note */
+.parent-note{background:var(--bg-soft);border:1px solid var(--border);padding:24px 28px;}
+.parent-eye{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.parent-h{font-family:'EB Garamond',serif;font-size:20px;color:var(--ink);margin-bottom:12px;}
+.parent-text{font-size:14px;color:var(--mid);line-height:1.85;}
+
+/* CTA - light cream, not dark */
+.cta-section{background:var(--cream);border-top:1px solid var(--border);padding:64px 40px;text-align:center;}
+.cta-eye{font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.cta-h1{font-family:'EB Garamond',serif;font-size:clamp(30px,5vw,50px);font-weight:400;color:var(--ink);line-height:1.1;margin-bottom:4px;}
+.cta-h2{font-family:'EB Garamond',serif;font-size:clamp(28px,4.5vw,46px);font-weight:400;font-style:italic;color:var(--gold);line-height:1.1;margin-bottom:20px;}
+.cta-subtext{font-size:15px;color:var(--mid);line-height:1.85;margin-bottom:36px;max-width:480px;margin-left:auto;margin-right:auto;}
+.cta-subtext strong{color:var(--ink);}
+.btn-cta{display:inline-block;background:var(--gold);color:#fff;font-size:15px;font-weight:500;padding:17px 44px;text-decoration:none;border-radius:2px;transition:background .2s;font-family:'Inter',sans-serif;letter-spacing:.02em;}
+.btn-cta:hover{background:var(--gold-light);}
+.aditi-wrap{display:flex;justify-content:center;margin-top:36px;}
+.aditi-card{display:flex;align-items:center;gap:16px;background:var(--bg);border:1px solid var(--border);padding:18px 24px;max-width:440px;width:100%;text-align:left;}
+.aditi-photo{width:52px;height:52px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--gold);object-fit:cover;}
+.aditi-initials{width:52px;height:52px;border-radius:50%;background:var(--gold-pale);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'EB Garamond',serif;font-size:20px;color:var(--gold);flex-shrink:0;}
+.aditi-name{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+.aditi-role{font-size:12px;color:var(--gold);margin-bottom:1px;}
+.aditi-cred{font-size:11px;color:var(--light);}
+.cta-note{font-size:13px;color:var(--mid);line-height:1.7;max-width:460px;margin:20px auto 0;}
+.cta-note strong{color:var(--ink);}
+.team-wrap{max-width:820px;margin:40px auto 0;border-top:1px solid var(--border);padding-top:32px;}
+.team-eye{font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--light);margin-bottom:14px;text-align:center;}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;}
+.team-card{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);background:var(--bg);}
+.team-av{width:34px;height:34px;border-radius:50%;background:var(--gold-pale);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'EB Garamond',serif;font-size:13px;color:var(--gold);flex-shrink:0;}
+.team-name{font-size:12px;font-weight:500;color:var(--ink);margin-bottom:1px;}
+.team-role{font-size:10px;color:var(--gold);margin-bottom:1px;}
+.team-cred{font-size:10px;color:var(--light);}
+
+@media(max-width:640px){
+  .rpt-header,.rpt-hero,.rpt-sec{padding-left:18px;padding-right:18px;}
+  .rpt-hero{padding-top:28px;padding-bottom:24px;}
+  .hero-scores{flex-direction:column;align-items:flex-start;}
+  .overall-box{text-align:left;}
+  .overall-big{font-size:60px;}
+  .dim-rings{gap:12px;}
+  .ring-wrap{width:58px;height:58px;}
+  .ring-wrap svg{width:58px;height:58px;}
+  .funnel-layout{grid-template-columns:1fr;}
+  .scorecard-grid{grid-template-columns:1fr;}
+  .proj-cols{grid-template-columns:1fr;}
+  .opts-grid{grid-template-columns:1fr;}
+  .cta-section{padding:44px 18px;}
+  .aditi-card{flex-direction:column;text-align:center;align-items:center;}
+  .rpt-meta{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<section id="landing">
+  <div class="logo-bar">Yocket <span>Elite</span></div>
+  <p class="landing-eye">Profile Builder</p>
+  <h1 class="landing-h">How ready is your child for Ivy League &amp; Top 25 global universities?</h1>
+  <p class="landing-sub">Answer 14 questions. Get a personalised profile assessment scored across the same four dimensions that Ivy League admissions officers use to evaluate every applicant.</p>
+  <button class="btn-gold" onclick="startForm()">Start now &#8594;</button>
+  <p class="landing-trust">Takes about 5 minutes &nbsp;&middot;&nbsp; No sign-up required</p>
+</section>
+
+<!-- FORM -->
+<section id="form-section">
+  <div class="form-header">
+    <div class="form-logo">Yocket <span>Elite</span></div>
+    <div class="prog-wrap">
+      <div class="prog-track"><div class="prog-fill" id="progFill" style="width:7%"></div></div>
+      <div class="prog-lbl" id="progLbl">Step 1 of 14</div>
+    </div>
+  </div>
+  <div class="form-body">
+
+    <div class="step active" id="step-1">
+      <p class="step-eye">About the student</p>
+      <h2 class="step-q">What is the student's full name?</h2>
+      <input type="text" class="form-input" id="f-name" placeholder="e.g. Arjun Mehta" />
+      <p class="err" id="err-1">Please enter a name.</p>
+      <div class="nav-row"><button class="btn-next" onclick="go(1)">Continue &#8594;</button></div>
+    </div>
+
+    <div class="step" id="step-2">
+      <p class="step-eye">About the student</p>
+      <h2 class="step-q">Which grade is the student currently in?</h2>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="pick(this,'f-grade')">Grade 8</button>
+        <button class="opt-btn" onclick="pick(this,'f-grade')">Grade 9</button>
+        <button class="opt-btn" onclick="pick(this,'f-grade')">Grade 10</button>
+        <button class="opt-btn" onclick="pick(this,'f-grade')">Grade 11</button>
+        <button class="opt-btn" onclick="pick(this,'f-grade')">Grade 12</button>
+        <button class="opt-btn" onclick="pick(this,'f-grade')">Gap year</button>
+      </div>
+      <input type="hidden" id="f-grade" />
+      <p class="err" id="err-2">Please select a grade.</p>
+      <div class="nav-row"><button class="btn-back" onclick="back(2)">&#8592; Back</button><button class="btn-next" onclick="go(2)">Continue &#8594;</button></div>
+    </div>
+
+    <div class="step" id="step-3">
+      <p class="step-eye">About the student</p>
+      <h2 class="step-q">What school does the student attend?</h2>
+      <p class="step-hint">School name and city.</p>
+      <input type="text" class="form-input" id="f-school" placeholder="e.g. Oberoi International, Mumbai" />
+      <p class="err" id="err-3">Please enter the school name.</p>
+      <div class="nav-row"><button class="btn-back" onclick="back(3)">&#8592; Back</button><button class="btn-next" onclick="go(3)">Continue &#8594;</button></div>
+    </div>
+
+    <div class="step" id="step-4">
+      <p class="step-eye">About the student</p>
+      <h2 class="step-q">Which curriculum is the student on?</h2>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="pick(this,'f-curriculum')">IB</button>
+        <button class="opt-btn" onclick="pick(this,'f-curriculum')">CBSE</button>
+        <button class="opt-btn" onclick="pick(this,'f-curriculum')">ICSE / ISC</button>
+        <button class="opt-btn" onclick="pick(this,'f-curriculum')">A Levels</button>
+        <button class="opt-btn" onclick="pick(this,'f-curriculum')">AP / American</button>
+        <button class="opt-btn" onclick="pick(this,'f-curriculum')">Other</button>
+      </div>
+      <input type="hidden" id="f-curriculum" />
+      <p class="err" id="err-4">Please select a curriculum.</p>
+      <div class="nav-row"><button class="btn-back" onclick="back(4)">&#8592; Back</button><button class="btn-next" onclick="go(4)">Continue &#8594;</button></div>
+    </div>
+
+    <div class="step" id="step-5">
+      <p class="step-eye">Targets</p>
+      <h2 class="step-q">Which universities is the student targeting?</h2>
+      <p class="step-hint">Select all that apply.</p>
+      <div class="chips-wrap">
+        <button class="chip" onclick="multiChip(this,'f-targets')">Ivy League</button>
+        <button class="chip" onclick="multiChip(this,'f-targets')">MIT / Caltech</button>
+        <button class="chip" onclick="multiChip(this,'f-targets')">Stanford</button>
+        <button class="chip" onclick="multiChip(this,'f-targets')">Top 10 US</button>
+        <button class="chip" onclick="multiChip(this,'f-targets')">Top 25 US</button>
+        <button class="chip" onclick="multiChip(this,'f-targets')">UK (Oxford / Cambridge / Imperial)</button>
+        <button class="chip" onclick="multiChip(this,'f-targets')">Canada (UofT / UBC / McGill)</button>
+      </div>
+      <input type="hidden" id="f-targets" />
+      <p class="sel-display" id="sel-targets"></p>
+      <p class="err" id="err-5">Please select at least one.</p>
+      <div class="nav-row"><button class="btn-back" onclick="back(5)">&#8592; Back</button><button class="btn-next" onclick="go(5)">Continue &#8594;</button></div>
+    </div>
+
+    <div class="step" id="step-6">
+      <p class="step-eye">Targets</p>
+      <h2 class="step-q">What does the student want to study?</h2>
+      <p class="step-hint">Select the closest area.</p>
+      <div class="chips-wrap">
+        <button class="chip" onclick="singleChip(this,'f-major')">Computer Science / Engineering</button>
+        <button class="chip" onclick="singleChip(this,'f-major')">Business / Economics</button>
+        <button class="chip" onclick="singleChip(this,'f-major')">Pre-Med / Biology</button>
+        <button class="chip" onclick="singleChip(this,'f-major')">Law / Political Science</button>
+        <button class="chip" onclick="singleChip(this,'f-major')">Math / Statistics</button>
+        <button class="chip" onclick="singleChip(this,'f-major')">Psychology / Social Sciences</button>
+        <button class="chip" onclick="singleChip(this,'f-major')">Arts / Design / Architecture</button>
+        <button class="chip" onclick="singleChip(this,'f-major')">Undecided</button>
+      </div>
+      <input type="hidden" id="f-major" />
+      <p class="err" id="err-6">Please select an area of study.</p>
+      <div class="nav-row"><button class="btn-back" onclick="back(6)">&#8592; Back</button><button class="btn-next" onclick="go(6)">Continue &#8594;</button></div>
+    </div>
+
+    <div class="step" id="step-7">
+      <p class="step-eye">Academics</p>
+      <h2 class="step-q">How does the student rank academically in their school?</h2>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="pick(this,'f-academic')">Top 5% of class</button>
+        <button class="opt-btn" onclick="pick(this,'f-academic')">Top 10-15%</button>
+        <button class="opt-btn" onclick="pick(this,'f-academic')">Top 25%</button>
+        <button class="opt-btn" onclick="pick(this,'f-academic')">Around the middle</button>
+        <button class="opt-btn" onclick="pick(this,'f-academic')">Not sure</button>
+        <button class="opt-btn" onclick="pick(this,'f-academic')">Below average</button>
+      </div>
+      <input type="hidden" id="f-academic" />
+      <p class="err" id="err-7">Please select an option.</p>
+      <div class="nav-row"><button class="btn-back" onclick="back(7)">&#8592; Back</button><button class="btn-next" onclick="go(7)">Continue &#8594;</button></div>
+    </div>
+
+    <div class="step" id="step-8">
+      <p class="step-eye">Academics</p>
+      <h2 class="step-q">Has the student won any awards or competitions outside of school?</h2>
+      <p class="step-hint">Olympiads, national competitions, external certifications, selective programmes.</p>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="pick(this,'f-awards')">Yes - national or international</button>
+        <button class="opt-btn" onclick="pick(this,'f-awards')">Yes - state or regional</button>
+        <button class="opt-btn" onclick="pick(this,'f-awards')">Within school only</button>
+        <button class="opt-btn" onclick="pick(this,'f-awards')">Not yet</button>
+      </div>
+      <input type="hidden" id="f-awards" />
+      <p class="err" id="err-8">Please select an option.</p>
+      <div class="nav-row"><button class="btn-back" onclick="back(8)">&#8592; Back</button><button class="btn-next" onclick="go(8)">Continue &#8594;</button></div>
+    </div>
+
+    <div class="step" id="step-9">
+      <p class="step-eye">Extracurriculars</p>
+      <h2 class="step-q">What extracurricular activities is the student involved in?</h2>
+      <p class="step-hint">List the main ones briefly - clubs, projects, competitions, volunteering.</p>
+      <textarea class="form-textarea" id="f-eca" placeholder="e.g. MUN, school debate team, coding club, startup project"></textarea>
+      <p class="err" id="err-9">Please describe the activities.</p>
+      <div class="nav-row"><button class="btn-back" onclick="back(9)">&#8592; Back</button><button class="btn-next" onclick="go(9)">Continue &#8594;</button></div>
+    </div>
+
+    <div class="step" id="step-10">
+      <p class="step-eye">Extracurriculars</p>
+      <h2 class="step-q">Has the student had any leadership roles or built something with real-world impact?</h2>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="pick(this,'f-leadership')">Yes - led something outside school</button>
+        <button class="opt-btn" onclick="pick(this,'f-leadership')">Yes - within school</button>
+        <button class="opt-btn" onclick="pick(this,'f-leadership')">In progress</button>
+        <button class="opt-btn" onclick="pick(this,'f-leadership')">Not yet</button>
+      </div>
+      <input type="hidden" id="f-leadership" />
+      <p class="err" id="err-10">Please select an option.</p>
+      <div class="nav-row"><button class="btn-back" onclick="back(10)">&#8592; Back</button><button class="btn-next" onclick="go(10)">Continue &#8594;</button></div>
+    </div>
+
+    <div class="step" id="step-11">
+      <p class="step-eye">Athletics</p>
+      <h2 class="step-q">Is the student involved in any sport?</h2>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="pick(this,'f-sport')">Yes - national or state level</button>
+        <button class="opt-btn" onclick="pick(this,'f-sport')">Yes - school or club level</button>
+        <button class="opt-btn" onclick="pick(this,'f-sport')">Recreational only</button>
+        <button class="opt-btn" onclick="pick(this,'f-sport')">Not really</button>
+      </div>
+      <input type="hidden" id="f-sport" />
+      <p class="err" id="err-11">Please select an option.</p>
+      <div class="nav-row"><button class="btn-back" onclick="back(11)">&#8592; Back</button><button class="btn-next" onclick="go(11)">Continue &#8594;</button></div>
+    </div>
+
+    <!-- Step 12: Intake year (replaces timeline) -->
+    <div class="step" id="step-12">
+      <p class="step-eye">Application Target</p>
+      <h2 class="step-q">Which intake year is the student targeting?</h2>
+      <p class="step-hint">Select the year they plan to start university.</p>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="pick(this,'f-intake')">2027 intake</button>
+        <button class="opt-btn" onclick="pick(this,'f-intake')">2028 intake</button>
+        <button class="opt-btn" onclick="pick(this,'f-intake')">2029 intake</button>
+        <button class="opt-btn" onclick="pick(this,'f-intake')">2030 intake</button>
+        <button class="opt-btn" onclick="pick(this,'f-intake')">2031 intake</button>
+        <button class="opt-btn" onclick="pick(this,'f-intake')">Not sure yet</button>
+      </div>
+      <input type="hidden" id="f-intake" />
+      <p class="err" id="err-12">Please select an intake year.</p>
+      <div class="nav-row"><button class="btn-back" onclick="back(12)">&#8592; Back</button><button class="btn-next" onclick="go(12)">Continue &#8594;</button></div>
+    </div>
+
+    <div class="step" id="step-13">
+      <p class="step-eye">Almost done</p>
+      <h2 class="step-q">What is the parent or guardian's name?</h2>
+      <p class="step-hint">We'll address the parent note in the report to you personally.</p>
+      <input type="text" class="form-input" id="f-parent" placeholder="e.g. Priya Mehta" />
+      <p class="err" id="err-13">Please enter a name.</p>
+      <div class="nav-row"><button class="btn-back" onclick="back(13)">&#8592; Back</button><button class="btn-next" onclick="go(13)">Continue &#8594;</button></div>
+    </div>
+
+    <div class="step" id="step-14">
+      <p class="step-eye">Almost done</p>
+      <h2 class="step-q">Where should we send a copy of the report?</h2>
+      <p class="step-hint">Email address (required) and WhatsApp number (optional).</p>
+      <input type="email" class="form-input" id="f-email" placeholder="Email address" style="margin-bottom:10px" />
+      <input type="tel" class="form-input" id="f-phone" placeholder="WhatsApp number (optional)" />
+      <p class="err" id="err-14">Please enter a valid email address.</p>
+      <div class="nav-row"><button class="btn-back" onclick="back(14)">&#8592; Back</button><button class="btn-next" onclick="submitForm()">Generate my report &#8594;</button></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- GENERATING -->
+<section id="generating" style="display:none;flex-direction:column;">
+  <div class="gen-logo">Yocket <span>Elite</span></div>
+  <div class="gen-spinner"></div>
+  <h2 class="gen-h">Building your profile report...</h2>
+  <p class="gen-s">Scoring across 4 dimensions used by Ivy League admissions officers.</p>
+</section>
+
+<!-- REPORT -->
+<section id="report-section">
+  <div class="rpt-header">
+    <div class="rpt-logo">Yocket <span>Elite</span></div>
+    <div class="rpt-meta" id="rpt-date"></div>
+  </div>
+
+  <div class="rpt-hero">
+    <p class="rpt-eyebrow">YOCKET ELITE &nbsp;&#183;&nbsp; PROFILE ASSESSMENT</p>
+    <h1 class="rpt-name" id="r-name">-</h1>
+    <p class="rpt-tag" id="r-tag">-</p>
+    <div class="hero-scores">
+      <div class="dim-rings" id="r-rings"></div>
+      <div class="overall-box">
+        <div class="overall-big" id="r-overall">-</div>
+        <div class="overall-den">out of 100</div>
+        <div class="overall-verdict" id="r-verdict">-</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rpt-sec">
+    <p class="sec-eye">01 &nbsp;&#183;&nbsp; THE ADMISSION LANDSCAPE</p>
+    <h2 class="sec-title">What Your Child Is Competing Against</h2>
+    <p class="sec-prose" id="r-context"></p>
+    <div class="funnel-layout">
+      <div>
+        <p class="funnel-lbl">Out of every 100 international students who apply to T10 universities</p>
+        <div class="f-row">
+          <div class="f-bar-wrap">
+            <div class="f-bar-track">
+              <div class="f-bar-fill" style="width:100%"></div>
+              <span class="f-bar-label" style="color:#fff;font-weight:500">100 students apply</span>
+            </div>
+          </div>
+          <span class="f-num">100</span>
+        </div>
+        <div class="f-arrow">&#9660;</div>
+        <div class="f-row">
+          <div class="f-bar-wrap">
+            <div class="f-bar-track">
+              <div class="f-bar-fill" style="width:40%"></div>
+              <span class="f-bar-label">~40 are academically competitive</span>
+            </div>
+          </div>
+          <span class="f-num">40</span>
+        </div>
+        <div class="f-arrow">&#9660;</div>
+        <div class="f-row">
+          <div class="f-bar-wrap">
+            <div class="f-bar-track">
+              <div class="f-bar-fill" style="width:15%"></div>
+              <span class="f-bar-label">~5 have a strong enough profile</span>
+            </div>
+          </div>
+          <span class="f-num">5</span>
+        </div>
+        <div class="f-arrow">&#9660;</div>
+        <div class="f-row">
+          <div class="f-bar-wrap">
+            <div class="f-bar-track" style="background:var(--gold-pale)">
+              <div class="f-bar-fill" style="width:8%"></div>
+              <span class="f-bar-label" style="padding-left:12px;color:var(--ink);font-weight:600">~1 gets admitted</span>
+            </div>
+          </div>
+          <span class="f-num hl">1</span>
+        </div>
+      </div>
+      <div class="ctx-stats">
+        <div class="ctx-stat">
+          <p class="ctx-stat-lbl">Months left to build</p>
+          <p class="ctx-stat-val" id="r-months">-</p>
+          <p class="ctx-stat-desc">Every 6 months of directed effort closes the gap measurably.</p>
+          <p class="ctx-stat-warn" id="r-months-warn"></p>
+        </div>
+        <div class="ctx-stat">
+          <p class="ctx-stat-lbl">Target intake</p>
+          <p class="ctx-stat-val" style="font-size:22px;font-family:'EB Garamond',serif" id="r-intake">-</p>
+          <p class="ctx-stat-desc" id="r-intake-desc">-</p>
+        </div>
+        <div class="ctx-stat">
+          <p class="ctx-stat-lbl">Students with a plan</p>
+          <p class="ctx-stat-val">&lt;8%</p>
+          <p class="ctx-stat-desc">A structured plan puts your child ahead of 90%+ of international peers.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rpt-sec">
+    <p class="sec-eye">02 &nbsp;&#183;&nbsp; YOUR CHILD'S SCORE CARD</p>
+    <h2 class="sec-title">Where They Stand Today</h2>
+    <p class="sec-prose">Each dimension scored out of 100. The marker shows the minimum score needed to be competitive at Ivy League and Top 25 universities. Higher is always better.</p>
+    <div class="scorecard-grid" id="r-scorecard"></div>
+  </div>
+
+  <div class="rpt-sec">
+    <p class="sec-eye">03 &nbsp;&#183;&nbsp; IS THE PROFILE FOCUSED ENOUGH?</p>
+    <h2 class="sec-title">What the Profile Says Right Now</h2>
+    <div class="counselor-card">
+      <p class="counselor-eye">Our Counsellor's Read</p>
+      <p class="counselor-text" id="r-narrative">-</p>
+    </div>
+  </div>
+
+  <div class="rpt-sec">
+    <p class="sec-eye">04 &nbsp;&#183;&nbsp; TWO PATHS FROM HERE</p>
+    <h2 class="sec-title">What Happens Next</h2>
+    <p class="sec-prose">Where each score can realistically reach with consistent effort - and what becomes possible or closes off depending on when action starts.</p>
+    <table class="proj-tbl" style="margin-top:20px" id="r-proj-tbl"></table>
+    <div class="proj-cols" id="r-proj-cols"></div>
+  </div>
+
+  <div class="rpt-sec">
+    <p class="sec-eye">FOR PARENTS</p>
+    <h2 class="sec-title">What This Means for Your Family</h2>
+    <div class="parent-note">
+      <p class="parent-eye" id="r-parent-eye">A NOTE FOR THE PARENTS</p>
+      <h3 class="parent-h">The honest summary.</h3>
+      <p class="parent-text" id="r-parent-text">-</p>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <p class="cta-eye">Next step</p>
+    <h2 class="cta-h1">This report is a diagnosis.</h2>
+    <h2 class="cta-h2">Not a prescription.</h2>
+    <p class="cta-subtext">
+      A score tells you where your child is today.<br>
+      <strong>A plan tells you what to do next.</strong><br>
+      That is a different conversation.
+    </p>
+    <a href="https://calendly.com/sandesh-vp-yocket/new-meeting" target="_blank" class="btn-cta">Book a FREE session with Aditi now &#8594;</a>
+    <div class="aditi-wrap">
+      <div class="aditi-card">
+        <img src="https://i.imgur.com/8bKXxZr.jpeg" alt="Aditi Lahiri" class="aditi-photo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <div class="aditi-initials" style="display:none">A</div>
+        <div>
+          <p class="aditi-name">Aditi Lahiri</p>
+          <p class="aditi-role">Student Onboarding Lead &nbsp;&#183;&nbsp; Yocket Elite</p>
+          <p class="aditi-cred">Student Success Specialist &nbsp;&#183;&nbsp; 200+ families guided</p>
+        </div>
+      </div>
+    </div>
+    <p class="cta-note">Aditi and the team will look at your child's score and tell you - in plain language - <strong>exactly what needs to happen next.</strong></p>
+    <div class="team-wrap">
+      <p class="team-eye">The team behind every plan</p>
+      <div class="team-grid">
+        <div class="team-card"><div class="team-av">A</div><div><p class="team-name">Aditi Lahiri</p><p class="team-role">Student Onboarding Lead</p><p class="team-cred">Student Success Specialist</p></div></div>
+        <div class="team-card"><div class="team-av">B</div><div><p class="team-name">Bushnin Waseem Patel</p><p class="team-role">Counselling Head</p><p class="team-cred">10+ yrs &middot; Ivy League &amp; Top 20</p></div></div>
+        <div class="team-card"><div class="team-av">S</div><div><p class="team-name">Simona Campbell</p><p class="team-role">Senior Strategist</p><p class="team-cred">Ex-Asst Dean, Georgetown</p></div></div>
+        <div class="team-card"><div class="team-av">D</div><div><p class="team-name">Danielle Kanclerz</p><p class="team-role">Senior Admissions Expert</p><p class="team-cred">Ex AO &middot; Stanford, UC Berkeley</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+var TOTAL=14, cur=1;
+var multiSel={'f-targets':[]};
+var SUPA_URL='https://mtwjsfttmzoecxdnqpcy.supabase.co';
+var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10d2pzZnR0bXpvZWN4ZG5xcGN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NzQ3NDYsImV4cCI6MjA5NjE1MDc0Nn0.zrYp_97_hUf4eoyGAJPWsxiqTh-33iYeXDhVu9rgYPU';
+
+function startForm(){document.getElementById('landing').style.display='none';document.getElementById('form-section').style.display='block';updateProg(1);}
+function updateProg(s){document.getElementById('progFill').style.width=Math.round((s/TOTAL)*100)+'%';document.getElementById('progLbl').textContent='Step '+s+' of '+TOTAL;}
+function go(s){if(!validate(s))return;document.getElementById('step-'+s).classList.remove('active');cur=s+1;document.getElementById('step-'+cur).classList.add('active');updateProg(cur);window.scrollTo(0,0);}
+function back(s){document.getElementById('step-'+s).classList.remove('active');cur=s-1;document.getElementById('step-'+cur).classList.add('active');updateProg(cur);window.scrollTo(0,0);}
+function pick(btn,fid){btn.closest('.opts-grid').querySelectorAll('.opt-btn').forEach(function(b){b.classList.remove('selected');});btn.classList.add('selected');document.getElementById(fid).value=btn.textContent.trim();}
+function singleChip(btn,fid){btn.closest('.chips-wrap').querySelectorAll('.chip').forEach(function(b){b.classList.remove('selected');});btn.classList.add('selected');document.getElementById(fid).value=btn.textContent.trim();}
+function multiChip(btn,fid){var v=btn.textContent.trim();var idx=multiSel[fid].indexOf(v);if(idx===-1){multiSel[fid].push(v);btn.classList.add('selected');}else{multiSel[fid].splice(idx,1);btn.classList.remove('selected');}document.getElementById(fid).value=multiSel[fid].join(', ');var d=document.getElementById('sel-targets');if(d)d.textContent=multiSel[fid].length?'Selected: '+multiSel[fid].join(' + '):'';}
+function validate(s){
+  var fm={1:'f-name',2:'f-grade',3:'f-school',4:'f-curriculum',5:'f-targets',6:'f-major',
+          7:'f-academic',8:'f-awards',9:'f-eca',10:'f-leadership',11:'f-sport',
+          12:'f-intake',13:'f-parent',14:'f-email'};
+  var val=(document.getElementById(fm[s])||{value:''}).value.trim();
+  var e=document.getElementById('err-'+s);
+  if(!val){e.style.display='block';return false;}
+  if(s===14&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){e.style.display='block';return false;}
+  e.style.display='none';return true;
+}
+
+/* Intake year to months from June 2026 */
+function intakeToMonths(intake){
+  var map={'2027 intake':13,'2028 intake':25,'2029 intake':37,'2030 intake':49,'2031 intake':61,'Not sure yet':30};
+  return map[intake]||30;
+}
+
+/* SCORING ENGINE
+ * Internal 4->1 scale. Display: 0-100 via dimTo100().
+ * KEY CHANGE: scores are deliberately kept in realistic ranges.
+ * Even the best form answers cannot exceed ~72/100 on academic
+ * and ~70/100 on EC — there is always meaningful gap to the benchmark.
+ * This reflects reality: a form alone cannot capture the depth
+ * of a truly T10-ready profile.
+ */
+function dimTo100(raw){return Math.round(((4-raw)/3)*100);}
+
+function calcScores(fd){
+  var months=intakeToMonths(fd.intake);
+
+  /* Academic: max raw 2.0 = 66/100. Cap at 2.0 so display max is 66. */
+  var ac=3.5;
+  if(fd.academic==='Top 5% of class')ac=2.5;
+  else if(fd.academic==='Top 10-15%')ac=2.8;
+  else if(fd.academic==='Top 25%')ac=3.2;
+  else if(fd.academic==='Around the middle')ac=3.6;
+  else ac=4.0;
+  /* External awards improve but cannot fully close the gap on their own */
+  if(fd.awards==='Yes - national or international')ac=Math.max(2.2,ac-0.4);
+  else if(fd.awards==='Yes - state or regional')ac=Math.max(2.5,ac-0.2);
+  if(fd.curriculum==='IB')ac=Math.max(2.3,ac-0.15);
+  /* Cap: even best case shows a gap */
+  ac=Math.max(ac,2.1);
+
+  /* Extracurricular: max 2.1 = 63/100. Always gap to benchmark 83. */
+  var ec=3.6;
+  if(fd.leadership==='Yes - led something outside school')ec=2.4;
+  else if(fd.leadership==='Yes - within school')ec=2.8;
+  else if(fd.leadership==='In progress')ec=3.2;
+  else ec=3.6;
+  if(fd.awards==='Yes - national or international')ec=Math.max(2.1,ec-0.4);
+  else if(fd.awards==='Yes - state or regional')ec=Math.max(2.4,ec-0.2);
+  ec=Math.max(ec,2.1);
+
+  /* Athletic: involvement level only */
+  var at=4.0;
+  if(fd.sport==='Yes - national or state level')at=1.5;
+  else if(fd.sport==='Yes - school or club level')at=3.0;
+  else if(fd.sport==='Recreational only')at=3.5;
+
+  /* Personal: max 2.3 = 57/100 */
+  var pe=3.2;
+  if(fd.leadership==='Yes - led something outside school')pe=2.3;
+  else if(fd.leadership==='Yes - within school')pe=2.7;
+  else pe=3.2;
+  pe=Math.max(pe,2.3);
+
+  /* Overall: weighted, always shows room to grow */
+  var score=100;
+  score-=(ac-2.0)*18;
+  score-=(ec-1.5)*16;
+  score-=(pe-2.0)*14;
+  if(at<=2.0)score=Math.min(score+6,100);
+  /* Urgency modifier based on intake */
+  if(months<=13)score=Math.max(score-10,22);
+  else if(months<=25)score=Math.max(score-5,22);
+  score=Math.round(Math.min(82,Math.max(28,score))); /* Hard cap at 82 — never "perfect" */
+
+  var verdict='Needs Urgent Work';
+  if(score>=68)verdict='Competitive — gaps remain';
+  else if(score>=52)verdict='Building — work needed';
+  else verdict='Needs Urgent Work';
+
+  return{ac:ac,ec:ec,at:at,pe:pe,overall:score,verdict:verdict,months:months};
+}
+
+function buildContent(fd,sc){
+  var name=fd.name,grade=fd.grade,school=fd.school,targets=fd.targets,major=fd.major,parent=fd.parent;
+  var months=sc.months;
+  var t1=(targets||'top universities').split(',')[0].trim();
+  var intake=fd.intake||'2029 intake';
+
+  var intakeDesc=months<=15?
+    'This is a very tight window. There is limited time to build new credentials from scratch - focus must be immediate and targeted.':
+    months<=27?
+    'A focused 2-year plan can still make a meaningful difference. Priorities need to be set now.':
+    'Enough runway to build a genuinely strong profile - if the plan starts now and the right direction is chosen.';
+
+  var monthsWarn=months<=13?'Critical window. Decisions made now have immediate impact on applications.':
+    months<=25?'Each month of delay narrows what is achievable before applications open.':'';
+
+  var contextText=name+' is a '+grade+' student at '+school+', targeting '+t1+' for '+major+' in the '+intake+'. '+
+    (months<=15?'The timeline is extremely compressed. T10 programmes see thousands of strong international applicants. At this stage, the question is not what to add - it is what to make undeniable in the time remaining.':
+    months<=27?'With just over two years to build, there is time to create real proof points - but only if the next decision about direction is made deliberately and acted on immediately.':
+    'With '+months+' months until applications open, there is genuine runway to build something impressive. But runway only matters if it is used. The students who make it into the top 1% globally are almost never the ones who started late and sprinted - they are the ones who began early, built consistently, and arrived at application year with a file that tells one undeniable story.');
+
+  /* Benchmarks: ac=66 (raw 2.0), ec=83 (raw 1.5), pe=66 (raw 2.0) */
+  var acBench=66,ecBench=83,peBench=66;
+  var ac100=dimTo100(sc.ac),ec100=dimTo100(sc.ec),pe100=dimTo100(sc.pe);
+
+  /* Score card prose - always honest about gaps */
+  var dimProse={};
+  var acGap=acBench-ac100;
+  dimProse.ac=ac100>=acBench?
+    'Academic standing is solid, but "solid" is not enough at the T10 level. Admissions officers see hundreds of top-of-class students from strong schools. What distinguishes the admits is external proof - a national Olympiad result, a selective programme, a competition where the jury has never heard of '+school+'. That credential does not exist yet. It needs to.':
+    acGap<=15?
+    'Good academic standing at '+school+'. The gap to competitive level ('+acBench+'/100) is '+acGap+' points - closeable, but only through external validation. Top marks within school are necessary but not sufficient. One credential from outside closes this.':
+    acGap<=30?
+    'Academic performance is developing, but is currently '+acGap+' points below the competitive threshold. The gap matters. T10 programmes need evidence that a student can compete beyond their own institution - an Olympiad, a selective external programme, or a national competition result.':
+    'Academic performance needs significant work. At '+ac100+'/100 against a competitive benchmark of '+acBench+', this is the most important dimension to address. It requires sustained effort over time - not a sprint.';
+
+  var ecGap=ecBench-ec100;
+  dimProse.ec=ec100>=ecBench?
+    'Extracurricular involvement is strong relative to peers. However, the benchmark for Ivy League is high - national recognition and external proof are what separate the admits from the near-misses. The activities need to tell one coherent story that a reader in an Ivy admissions office can immediately understand and remember.':
+    ecGap<=20?
+    'Good extracurricular involvement with some leadership. The gap to competitive level is '+ecGap+' points. What bridges it is external recognition - someone outside '+school+' noticing and validating the work. A competition win, a published project, or an initiative with measurable real-world impact.':
+    ecGap<=35?
+    'Activities are present but currently '+ecGap+' points below the competitive benchmark. There is no standout external recognition yet - the kind that an admissions officer can point to when making the case for admission. One direction, taken seriously over 12-18 months, changes this dimension.':
+    'Extracurricular depth is the biggest gap in this profile at '+ecGap+' points below benchmark. This is also the most buildable dimension. It requires committing to one direction now and going deep - not adding more activities to a list.';
+
+  dimProse.pe=pe100>=peBench?
+    'Personal maturity and sense of direction are visible. Ensure this translates explicitly into the essays - not as stated values, but as specific moments where character was tested and showed up. Essays are where this dimension is won or lost.':
+    'The personal dimension is '+Math.abs(peBench-pe100)+' points below the competitive benchmark. Leadership experience and personal depth are still developing. The next period is about gaining real experiences that provide genuine essay material - moments of maturity, initiative, or contribution that go beyond the expected.';
+
+  dimProse.at=sc.at<=2.0?
+    'National-level athletic achievement is a real competitive advantage. Recruited athletes have a genuine edge. Coaches at target schools should be contacted directly and this should be prominently featured across applications.':
+    sc.at<=3.0?
+    'Active in sport at school or club level. For a '+major+' applicant this adds personal depth but is not a primary admissions lever. No additional athletic investment is needed specifically for admissions purposes.':
+    'Limited structured athletic involvement. This is fine for a '+major+' applicant - the vast majority of Ivy admits in this field are not recruited athletes. Focus and energy should go entirely to the dimensions that drive the admissions decision.';
+
+  var hasL=fd.leadership.indexOf('Yes')!==-1;
+  var narrative=hasL?
+    name+"'s profile has visible leadership and extracurricular involvement - a real starting point. The honest read is that these are activities many competitive applicants have. What is missing is the thread that connects them into one argument: a student who saw a specific problem, committed to solving it, and built something whose impact reaches beyond "+school+". The activities exist; the story does not yet. That story is what the next plan needs to create.":
+    'Right now '+name+"'s profile reads as a student with interests - not yet a student with a direction. This is common at "+grade+", and it is fixable. What T10 admissions officers want to see is specificity: not 'interested in technology' but 'built X for Y people and here is what happened'. The transition from 'interested in' to 'has done' is the most important move in the next 12-18 months - and it requires picking one direction deliberately rather than continuing to explore broadly.";
+
+  /* Projections: show meaningful improvement but never reach benchmark
+   * Even with full effort, projected scores stay below 100 and show clear gaps
+   */
+  var projMonthsFactor=months>=37?0.7:months>=25?0.55:months>=13?0.4:0.25;
+  var pAcRaw=Math.max(sc.ac-projMonthsFactor*0.6,2.0);
+  var pEcRaw=Math.max(sc.ec-projMonthsFactor*0.9,1.8);
+  var pPeRaw=Math.max(sc.pe-projMonthsFactor*0.5,2.1);
+  var pAc=dimTo100(pAcRaw);
+  var pEc=dimTo100(pEcRaw);
+  var pPe=dimTo100(pPeRaw);
+  /* Ensure projections never hit 100 and always show remaining gap */
+  pAc=Math.min(pAc,79);pEc=Math.min(pEc,78);pPe=Math.min(pPe,77);
+
+  var actBody=months>=37?
+    ('With '+months+' months of directed effort, '+name+" could arrive at applications with: one external credential at national level (Olympiad, competition, selective programme), a project or initiative with measurable real-world impact, and essays grounded in years of evidence. That profile would be genuinely competitive. It requires starting now."):
+    ('In the available window, the highest-leverage move is to commit immediately to one direction and close the biggest gap. A focused, well-executed plan still produces meaningful improvement - but every month of delay reduces what is achievable before the '+intake+'.');
+  var waitBody='Delay is not neutral. Every month without a directed plan is a month the competition is building. Students who start in Grade 12 face compressed time for the same work - and compressed time produces thinner evidence. A profile built over years looks categorically different from one assembled in a sprint.';
+
+  /* Parent note: crisp, 3-4 sentences, balanced, no time reference */
+  var strength=ac100>=60?'academic standing':'extracurricular involvement';
+  var gap=ecGap>acGap?'extracurricular depth and external recognition':'academic credentials beyond the school';
+  var parentNote=name+' shows genuine promise - the '+(hasL?'leadership experience and initiative':'curiosity and involvement')+' are real assets that admissions officers notice. The most critical gap right now is '+gap+' - this is what separates profiles that get noticed from those that do not. The single most useful thing is helping '+name+' commit to one clear direction and go deep on it, rather than spreading effort across many activities. A plan that connects the dots and builds toward a specific story will make the difference.';
+
+  return{contextText:contextText,months:months,intake:intake,intakeDesc:intakeDesc,monthsWarn:monthsWarn,
+         dimProse:dimProse,narrative:narrative,
+         pAc:pAc,pEc:pEc,pPe:pPe,actBody:actBody,waitBody:waitBody,
+         parentNote:parentNote,acBench:acBench,ecBench:ecBench,peBench:peBench,
+         ac100:ac100,ec100:ec100,pe100:pe100};
+}
+
+function submitForm(){
+  if(!validate(14))return;
+  var fd={
+    name:v('f-name'),grade:v('f-grade'),school:v('f-school'),
+    curriculum:v('f-curriculum'),targets:v('f-targets'),major:v('f-major'),
+    academic:v('f-academic'),awards:v('f-awards'),eca:v('f-eca'),
+    leadership:v('f-leadership'),sport:v('f-sport'),intake:v('f-intake'),
+    parent:v('f-parent'),email:v('f-email'),phone:v('f-phone')
+  };
+  document.getElementById('form-section').style.display='none';
+  var g=document.getElementById('generating');g.style.display='flex';
+  setTimeout(function(){
+    var sc=calcScores(fd);
+    var content=buildContent(fd,sc);
+    render(fd,sc,content);
+    save(fd,sc);
+    g.style.display='none';
+    document.getElementById('report-section').style.display='block';
+    window.scrollTo(0,0);
+  },1800);
+}
+function v(id){return(document.getElementById(id)||{value:''}).value.trim();}
+
+function render(fd,sc,c){
+  var now=new Date();
+  document.getElementById('rpt-date').textContent=fd.name+' · '+now.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})+' · Confidential';
+  document.getElementById('r-name').textContent=fd.name+'.';
+  document.getElementById('r-tag').textContent=fd.grade+' · '+fd.school+' · Targeting '+fd.targets.split(',')[0].trim()+' · '+fd.major;
+  document.getElementById('r-overall').textContent=sc.overall;
+
+  var vEl=document.getElementById('r-verdict');
+  vEl.textContent=sc.verdict;
+  vEl.className='overall-verdict '+(sc.overall>=68?'verdict-competitive':'verdict-building');
+
+  /* Rings */
+  var rData=[
+    {label:'Academic',pct:c.ac100,num:true},
+    {label:'Extracurricular',pct:c.ec100,num:true},
+    {label:'Athletic',pct:sc.at<=2?80:sc.at<=3?40:15,num:false,lvl:sc.at<=2?'High':sc.at<=3?'Mid':'Low'},
+    {label:'Personal',pct:c.pe100,num:true}
+  ];
+  var rEl=document.getElementById('r-rings');rEl.innerHTML='';
+  var circ=2*Math.PI*26;
+  rData.forEach(function(d){
+    var offset=circ*(1-d.pct/100);
+    var center=d.num?
+      '<div class="ring-val">'+d.pct+'</div><div class="ring-sub">/100</div>':
+      '<div class="ring-val" style="font-size:12px">'+d.lvl+'</div>';
+    rEl.innerHTML+='<div class="dim-ring-item"><div class="ring-wrap"><svg viewBox="0 0 68 68"><circle class="ring-track" cx="34" cy="34" r="26"/><circle class="ring-fill" cx="34" cy="34" r="26" stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+offset.toFixed(1)+'"/></svg><div class="ring-center">'+center+'</div></div><div class="ring-label">'+d.label+'</div></div>';
+  });
+
+  /* Context */
+  document.getElementById('r-context').textContent=c.contextText;
+  document.getElementById('r-months').textContent=c.months;
+  document.getElementById('r-months-warn').textContent=c.monthsWarn;
+  document.getElementById('r-intake').textContent=fd.intake==='Not sure yet'?'To be decided':fd.intake.replace(' intake','');
+  document.getElementById('r-intake-desc').textContent=c.intakeDesc;
+
+  /* Score card */
+  var scEl=document.getElementById('r-scorecard');scEl.innerHTML='';
+  var dims=[
+    {key:'ac',label:'Academic',s:c.ac100,b:c.acBench},
+    {key:'ec',label:'Extracurricular',s:c.ec100,b:c.ecBench},
+    {key:'pe',label:'Personal',s:c.pe100,b:c.peBench}
+  ];
+  dims.forEach(function(d){
+    var gap=d.b-d.s;
+    var color=gap<=5?'var(--green)':gap<=20?'var(--amber)':'var(--red)';
+    var pillCls=gap<=5?'pill-green':gap<=20?'pill-amber':'pill-red';
+    var pillTxt=gap<=5?'On track':gap<=20?'Gap: '+gap+' pts':'Gap: '+gap+' pts';
+    var vCls=gap<=5?'sc-verdict-tag pill-green':gap<=20?'sc-verdict-tag pill-amber':'sc-verdict-tag pill-red';
+    var vTxt=gap<=5?'On track for target':'Needs '+gap+' more points to reach competitive level';
+    var prose=d.key==='ac'?c.dimProse.ac:d.key==='ec'?c.dimProse.ec:c.dimProse.pe;
+    scEl.innerHTML+='<div class="sc-item">'+
+      '<div class="sc-head"><div class="sc-name">'+d.label+'</div><span class="sc-pill '+pillCls+'">'+pillTxt+'</span></div>'+
+      '<div class="sc-score-row"><span class="sc-score-big" style="color:'+color+'">'+d.s+'</span><span class="sc-score-den">/100</span><span class="sc-score-need">Need '+d.b+'/100</span></div>'+
+      '<div class="sc-bar-track"><div class="sc-bar-fill" style="width:'+d.s+'%;background:'+color+'"></div>'+
+      '<div class="sc-bar-marker" style="left:'+d.b+'%"><span class="sc-bar-marker-lbl">Target '+d.b+'</span></div></div>'+
+      '<div class="'+vCls+'">'+vTxt+'</div>'+
+      '<p class="sc-prose">'+prose+'</p>'+
+    '</div>';
+  });
+  /* Athletic special card */
+  var atLvl=sc.at<=2?'National level':sc.at<=3?'School / club level':'Recreational / none';
+  var atPill=sc.at<=2?'pill-green':'pill-grey';
+  scEl.innerHTML+='<div class="sc-item">'+
+    '<div class="sc-head"><div class="sc-name">Athletic</div><span class="sc-pill '+atPill+'">'+atLvl+'</span></div>'+
+    '<div class="athletic-note">Athletic involvement is not scored on the 0-100 scale. It is only a significant factor for students competing at national or state level who may be recruited athletes.</div>'+
+    '<p class="sc-prose">'+c.dimProse.at+'</p>'+
+  '</div>';
+
+  /* Narrative */
+  document.getElementById('r-narrative').textContent=c.narrative;
+
+  /* Projection table */
+  var tlbl=fd.intake==='Not sure yet'?'~2.5yr':
+    fd.intake==='2027 intake'?'~13mo':
+    fd.intake==='2028 intake'?'~25mo':
+    fd.intake==='2029 intake'?'~37mo':
+    fd.intake==='2030 intake'?'~49mo':'~61mo';
+  var pdata=[
+    {label:'Academic',now:c.ac100,proj:c.pAc,bench:c.acBench},
+    {label:'Extracurricular',now:c.ec100,proj:c.pEc,bench:c.ecBench},
+    {label:'Personal',now:c.pe100,proj:c.pPe,bench:c.peBench}
+  ];
+  document.getElementById('r-proj-tbl').innerHTML=
+    '<thead><tr><th>Dimension</th><th>Score now vs '+tlbl+' with directed effort</th><th style="text-align:right">Now</th><th style="text-align:right">Projected</th></tr></thead><tbody>'+
+    pdata.map(function(p){
+      return'<tr><td style="font-weight:500;font-size:13px">'+p.label+'</td><td>'+
+        '<div class="pb-row"><span style="min-width:42px;font-size:10px">Now</span><div class="pb-track"><div class="pb-now" style="width:'+p.now+'%"></div></div></div>'+
+        '<div class="pb-row"><span style="min-width:42px;font-size:10px">'+tlbl+'</span><div class="pb-track"><div class="pb-proj" style="width:'+p.proj+'%"></div></div></div>'+
+        '</td><td style="text-align:right" class="pv">'+p.now+'</td><td style="text-align:right" class="pv p">'+p.proj+'</td></tr>';
+    }).join('')+'</tbody>';
+
+  var ab=['One clear direction built over multiple years','External recognition earned — not assembled at the last minute','Essays backed by real evidence across years','A file that tells one undeniable story'];
+  var wb=['Gap to target universities widens','Profile reads as potential, not proof','Final year becomes a desperate sprint','Early Decision to top schools becomes unlikely'];
+  document.getElementById('r-proj-cols').innerHTML=
+    '<div class="pcol act"><p class="pcol-eye">Path A &nbsp;&#8594;&nbsp; Start now</p>'+
+    '<h3 class="pcol-h">Scores improve. The gap closes — not fully, but meaningfully.</h3>'+
+    '<p class="pcol-body">'+c.actBody+'</p>'+
+    '<p class="plist-head">What becomes possible</p>'+
+    '<ul class="plist">'+ab.map(function(b){return'<li><span class="plist-ic-g">&#10003;</span>'+b+'</li>';}).join('')+'</ul></div>'+
+    '<div class="pcol"><p class="pcol-eye">Path B &nbsp;&#8594;&nbsp; Delay a year</p>'+
+    '<h3 class="pcol-h">Less progress. The gap to target schools stays wide.</h3>'+
+    '<p class="pcol-body">'+c.waitBody+'</p>'+
+    '<p class="plist-head">What gets harder</p>'+
+    '<ul class="plist">'+wb.map(function(b){return'<li><span class="plist-ic-r">&#8594;</span>'+b+'</li>';}).join('')+'</ul></div>';
+
+  document.getElementById('r-parent-eye').textContent='A note for '+fd.name+"'s parents";
+  document.getElementById('r-parent-text').textContent=c.parentNote;
+}
+
+function save(fd,sc){
+  var payload={
+    name:fd.name,email:fd.email,phone:fd.phone,
+    grade:fd.grade,school:fd.school,curriculum:fd.curriculum,
+    target_universities:fd.targets,intended_major:fd.major,
+    academic_standing:fd.academic,extracurriculars:fd.eca,
+    athletics:fd.sport,personal_background:'',concerns:'',
+    months_to_apply:fd.intake,
+    overall_score:sc.overall,
+    academic_score:String(sc.ac),
+    extracurricular_score:String(sc.ec),
+    athletic_score:String(sc.at),
+    personal_score:String(sc.pe)
+  };
+  fetch(SUPA_URL+'/rest/v1/vs_submissions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'},
+    body:JSON.stringify(payload)
+  }).then(function(r){
+    if(!r.ok)r.text().then(function(t){console.error('Supabase '+r.status+':',t);});
+    else console.log('Supabase save OK');
+  }).catch(function(e){console.error('Supabase error:',e);});
+}
+</script>
+</body>
+</html>
